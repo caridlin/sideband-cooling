@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from __future__ import division
+from __future__ import division, print_function, unicode_literals
 
 def cache_result(func):
     __cache = {}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from __future__ import division
+from __future__ import division, print_function, unicode_literals
 
 from sideband import sb_strength, scatter_strength
 from trap import ODT
