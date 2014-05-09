@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import division
 from utils import cache_result
 from numpy import *
 

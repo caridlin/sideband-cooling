@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import division
+
 def cache_result(func):
     __cache = {}
     def _func(*arg):
