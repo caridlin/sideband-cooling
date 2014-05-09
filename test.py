@@ -32,7 +32,10 @@ def main_odt():
     odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.3)
     print(odt)
     print()
-    odt = ODT(5e-3, 589.3e-9, 1064e-9, NA=0.4)
+    odt = ODT(5e-3, 589.3e-9, 1000e-9, NA=0.4)
+    print(odt)
+    print()
+    odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.4)
     print(odt)
     print()
 
