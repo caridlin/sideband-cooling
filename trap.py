@@ -74,3 +74,18 @@ class ODT:
     @cache_prop
     def eta_r(self):
         return 2 * pi / self.__lamb0 * self.z0_r
+    @cache_prop
+    def nmax_r(self):
+        return self.depth_f / self.trap_freq_r / 2
+    @cache_prop
+    def nmax_l(self):
+        return self.depth_f / self.trap_freq_l / 2
+    def __str__(self):
+        return (('ODT for <lambda0: %fnm, m: %fu>\n' %
+                 (self.__lamb0 * 1e9, self.__m_a * N_A / 1e-3)) +
+                 '\n'.join(['%s: %e' % (prop, getattr(self, prop))
+                            for prop
+                            in ('w0', 'I0', 'depth', 'depth_f', 'depth_omega',
+                                'rayleigh_range', 'trap_omega_l', 'trap_omega_r',
+                                'trap_freq_l', 'trap_freq_r', 'z0_l', 'z0_r',
+                                'eta_l', 'eta_r', 'nmax_l', 'nmax_r')]))
