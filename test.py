@@ -43,28 +43,29 @@ def main_odt():
     print()
 
 def main_cooling():
-    __import__("matplotlib").rcParams.update({'axes.labelsize': 25,
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
                                               'axes.titlesize': 20})
     from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
     from pylab import legend, title, savefig, close, grid
 
-    # figure()
-    # imshow(abs(pump_mat(50, .8, 0)), origin='lower')
-    # xlabel('$n_1$')
-    # ylabel('$n_2$')
-    # title(r'Coupling due to optical pumping ($\eta=0.8, \theta=0$)')
-    # colorbar()
-    # savefig('pump_0.8_0.png', bbox_inches='tight')
-    # close()
+    figure()
+    imshow(abs(pump_mat(50, .8, 0)), origin='lower')
+    xlabel('$n_1$')
+    ylabel('$n_2$')
+    title('Optical pumping branching faction\n($\\eta=0.8, \\theta=0$)')
+    colorbar()
+    savefig('pump_0.8_0.png', bbox_inches='tight')
+    close()
 
-    # figure()
-    # imshow(abs(pump_mat(50, .8, pi / 2)), origin='lower')
-    # xlabel('$n_1$')
-    # ylabel('$n_2$')
-    # title(r'Coupling due to optical pumping ($\eta=0.8, \theta=\frac{\pi}{2}$)')
-    # colorbar()
-    # savefig('pump_0.8_pi_2.png', bbox_inches='tight')
-    # close()
+    figure()
+    imshow(abs(pump_mat(50, .8, pi / 2)), origin='lower')
+    xlabel('$n_1$')
+    ylabel('$n_2$')
+    title('Optical pumping branching faction\n'
+          '($\\eta=0.8, \\theta=\\frac{\\pi}{2}$)')
+    colorbar()
+    savefig('pump_0.8_pi_2.png', bbox_inches='tight')
+    close()
 
     figure()
     def plot_raman_mat(n, eta, dn):
@@ -74,9 +75,10 @@ def main_cooling():
     plot_raman_mat(140, .8, 20)
     plot_raman_mat(140, .8, 8)
     plot_raman_mat(140, .8, 1)
-    title(r'Coupling ($|\langle n|e^{ikr}|n-\delta n\rangle|^2$) '
-          'for different $\delta n$ and $n$')
+    title('Coupling ($|\\langle n|e^{ikr}|n-\\delta n\\rangle|^2$)\n'
+          'for different $\\delta n$ and $n$')
     xlabel('$n$')
+    ylabel(r'$|\langle n|e^{ikr}|n-\delta n\rangle|^2$')
     legend()
     grid()
     savefig('raman_0.8.png', bbox_inches='tight')
