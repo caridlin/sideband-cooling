@@ -5,6 +5,7 @@ from __future__ import division, print_function, unicode_literals
 from sideband import sb_strength, scatter_strength
 from trap import ODT
 from cooling import pump_mat, raman_mat
+from ode import solve_ode
 from numpy import *
 
 def plot_strength(n0, dn, eta, theta0, scatter=True):
@@ -85,10 +86,19 @@ def main_cooling():
     close()
     # show()
 
+def main_ode():
+    # from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    # from pylab import legend, title, savefig, close, grid
+
+    ts, ys = solve_ode(0, [0, 1], lambda t, y: array([y[1], -y[0]]), 10000, .01)
+    # plot(ts, ys.T[0])
+    # show()
+
 def main():
     # main_sideband()
     # main_odt()
-    main_cooling()
+    # main_cooling()
+    main_ode()
     pass
 
 if __name__ == '__main__':
