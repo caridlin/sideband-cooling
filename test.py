@@ -4,7 +4,8 @@ from __future__ import division, print_function, unicode_literals
 
 from sideband import sb_strength, scatter_strength
 from trap import ODT
-from cooling import pump_mat, raman_mat
+from cooling import pump_mat, raman_mat, calc_ddt_pump, calc_ddt_raman
+from cooling import gamma_pump, omega_raman, evolve_rho
 from ode import solve_ode
 from numpy import *
 
@@ -94,11 +95,194 @@ def main_ode():
     # plot(ts, ys.T[0])
     # show()
 
+def calc_total_n(rho):
+    ps = diag(rho)
+    n, = ps.shape
+    return abs(ps.dot(r_[arange(n // 2), arange(n // 2)]))
+
+def main_raman_sb_cooling():
+    # from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    # from pylab import legend, title, savefig, close, grid
+
+    n = 100
+    nstart = 30
+    gammas = gamma_pump(n, .8, pi / 2, 0.4, 0.2)
+    omegas = [omega_raman(n, .8, dn, 0) for dn in range(1, n + 1)]
+    def get_f(dn):
+        def f(t, rho):
+            return (calc_ddt_pump(rho, gammas) +
+                    calc_ddt_raman(rho, omegas[dn - 1]) * 10)
+        return f
+    ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
+           (1 - exp(-1 / nstart)))
+    rho0 = diag(r_[ps0, zeros(n + 1, dtype=complex128)])
+    dns = []
+
+    dnrange = range(1, 40)
+    for i in range(40):
+        print("\nstart iteration: %d" % i)
+        number = abs(sum(diag(rho0)))
+        ntotal = calc_total_n(rho0)
+        dnmax = 0
+        vmax = number**2 / ntotal
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal)
+        print("v: %f" % vmax)
+        for dn in dnrange:
+            print("dn: %d" % dn)
+            ts, rhos = solve_ode(0, rho0, get_f(dn), .45, 0.015)
+            print("dn: %d" % dn)
+            number = abs(sum(diag(rhos[-1])))
+            ntotal = calc_total_n(rhos[-1])
+            v = number**2 / ntotal
+            print("atom number: %f" % number)
+            print("total n: %f" % ntotal)
+            print("v: %f" % v)
+            if v > vmax:
+                print("use new dn: %d, v = %f" % (dn, v))
+                dnmax = dn
+                vmax = v
+                new_rho0 = rhos[-1]
+            # plot(abs(diag(rhos[0])), label='before')
+            # plot(abs(diag(rhos[-1])), label='after')
+            # legend()
+            # figure()
+            # plot(abs(diag(rhos[-1])) - abs(diag(rhos[0])))
+            # figure()
+            # imshow(abs(rhos[0]))
+            # figure()
+            # imshow(abs(rhos[-1]))
+            # show()
+            print('')
+        if dnmax == 0:
+            print("cooling stopped, abort")
+            break
+        dns.append(dnmax)
+        dnrange = range(max(dnmax - 15, 1), dnmax + 16)
+        rho0 = new_rho0
+        print('\n')
+
+    print("atom number: %f\n" % sum(diag(rho0)))
+    print("total n: %f\n" % calc_total_n(rho0))
+    print(dns)
+    # plot(abs(diag(rhos[0])))
+    # plot(abs(diag(rhos[-1])))
+    # figure()
+    # imshow(abs(rhos[0]))
+    # figure()
+    # imshow(abs(rhos[-1]))
+    # show()
+
+def main_raman_sb_cooling2():
+    # from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    # from pylab import legend, title, savefig, close, grid
+
+    # pumpp = 2
+    # theta_raman = 0
+    # [8, 6, 6, 6, 4, 8, 4, 7, 3, 6, 6, 4, 8, 3, 7, 5, 3, 10, 6, 3, 8, 2, 6,
+    #  4, 4, 2, 8, 5, 3, 2, 6, 4, 2, 8, 4, 2, 6, 2, 5, 3]
+
+    n = 100
+    nstart = 30
+    # pumpp = 1
+    # pumpp = 2
+    pumpp = 4
+    # theta_raman = 0
+    theta_raman = -pi / 5
+    ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
+           (1 - exp(-1 / nstart)))
+    rho0 = diag(r_[ps0, zeros(n + 1, dtype=complex128)])
+    dns = []
+
+    dnrange = range(20, 0, -1)
+    for i in range(40):
+        print("start iteration: %d" % i)
+        number = abs(sum(diag(rho0)))
+        ntotal_init = calc_total_n(rho0)
+        dnmax = 0
+        vmax = number**2 / ntotal_init
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal_init)
+        print("v: %f" % vmax)
+        for dn in dnrange:
+            print("iteration: %d, dn: %d" % (i, dn))
+            ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
+                                  theta_raman, pi / 2, pumpp, 0.05)
+            number = abs(sum(diag(rhos[-1])))
+            ntotal = calc_total_n(rhos[-1])
+            v = number**2 / ntotal
+            print("atom number: %f" % number)
+            print("total n: %f" % ntotal)
+            print("v: %f" % v)
+            if v > vmax:
+                print("use new dn: %d, v = %f, n decreases: %f" %
+                      (dn, v, ntotal_init - ntotal))
+                dnmax = dn
+                vmax = v
+                new_rho0 = rhos[-1]
+            # plot(abs(diag(rhos[0])), label='before')
+            # plot(abs(diag(rhos[-1])), label='after')
+            # legend()
+            # figure()
+            # plot(abs(diag(rhos[-1])) - abs(diag(rhos[0])))
+            # figure()
+            # imshow(abs(rhos[0]))
+            # figure()
+            # imshow(abs(rhos[-1]))
+            # show()
+            print('')
+        rho0 = new_rho0
+        if dnmax == 0:
+            print("cooling stopped, abort")
+            break
+        dns.append(dnmax)
+        dnrange = range(max(dnmax - 8, 1), dnmax + 9)
+        print('\n')
+
+    print(rho0)
+    print(diag(rho0))
+    print("atom number: %f\n" % sum(diag(rho0)))
+    print("total n: %f\n" % calc_total_n(rho0))
+    print(dns)
+    # plot(abs(diag(rhos[0])))
+    # plot(abs(diag(rhos[-1])))
+    # figure()
+    # imshow(abs(rhos[0]))
+    # figure()
+    # imshow(abs(rhos[-1]))
+    # show()
+
+def main_pump():
+    n = 100
+    gammas = gamma_pump(n, .8, pi / 2, 0.4, 0.02)
+    omegas = [omega_raman(n, .8, dn) for dn in range(1, 22)]
+    # omegas = omega_raman(n, .8, 10)
+    def f(t, rho):
+        dn = int(21 - t)
+        return calc_ddt_pump(rho, gammas) + calc_ddt_raman(rho, omegas[dn - 1])
+    ps0 = exp(-arange(n + 1, dtype=complex128) / 10) * (1 - exp(1 / 10))
+    rho0 = diag(r_[ps0, zeros(n + 1, dtype=complex128)])
+    print(sum(rho0))
+    print(calc_total_n(rho0))
+    ts, rhos = solve_ode(0, rho0, f, 20, .01)
+    print(abs(diag(rhos[0])))
+    print(abs(diag(rhos[-1])))
+    plot(abs(diag(rhos[0])))
+    plot(abs(diag(rhos[-1])))
+    figure()
+    imshow(abs(rhos[0]))
+    figure()
+    imshow(abs(rhos[-1]))
+    show()
+
 def main():
     # main_sideband()
     # main_odt()
     # main_cooling()
-    main_ode()
+    # main_ode()
+    # main_pump()
+    # main_raman_sb_cooling()
+    main_raman_sb_cooling2()
     pass
 
 if __name__ == '__main__':

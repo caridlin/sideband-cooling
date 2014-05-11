@@ -8,6 +8,7 @@ from utils import *
 from constants import *
 from trap import ODT
 from sideband import sb_strength, scatter_strength
+from ode import solve_ode
 
 try:
     range = xrange
@@ -56,6 +57,18 @@ def omega_raman(n, eta, dn=1, theta1=-pi / 2, theta2=pi / 2):
         res[n + i, i + dn] = raman[i].conjugate()
     return res
 
+@cache_result
+def norm_omega_raman(n, eta, dn=1, theta1=-pi / 2, theta2=pi / 2):
+    raman = raman_mat(n, eta, dn, theta1, theta2)
+    n = n + 1
+    res = zeros((n * 2, n * 2), dtype=complex128)
+    omega_m = max(abs(raman[:n - dn]).max(), 0.05)
+    print('omega:', 1 / omega_m)
+    for i in range(n - dn):
+        res[i + dn, n + i] = raman[i] / omega_m
+        res[n + i, i + dn] = raman[i].conjugate() / omega_m
+    return res
+
 def _upper_iter(size):
     for j in range(size):
         for i in range(j + 1):
@@ -82,3 +95,14 @@ def calc_ddt_pump(rho, gammas):
 def calc_ddt_raman(rho, omegas):
     m, n = rho.shape
     return 1j * (rho.dot(omegas) - omegas.dot(rho))
+
+def evolve_rho(rho, t, dt, eta, dn, branch, theta0,
+               theta1=-pi / 2, theta2=pi / 2, pumpp=1., miss=0.0):
+    m, n = rho.shape
+    n = n // 2 - 1
+    gammas = gamma_pump(n, eta, theta0, branch, miss)
+    omegas = norm_omega_raman(n, eta, dn, theta1, theta2)
+    def f(t, rho):
+        return (calc_ddt_pump(rho, gammas) * pumpp +
+                calc_ddt_raman(rho, omegas))
+    return solve_ode(0, rho, f, t, dt)
