@@ -181,14 +181,15 @@ def main_raman_sb_cooling2():
     # theta_raman = 0
     # [8, 6, 6, 6, 4, 8, 4, 7, 3, 6, 6, 4, 8, 3, 7, 5, 3, 10, 6, 3, 8, 2, 6,
     #  4, 4, 2, 8, 5, 3, 2, 6, 4, 2, 8, 4, 2, 6, 2, 5, 3]
+    # 5.244526
 
     n = 100
     nstart = 30
     # pumpp = 1
-    # pumpp = 2
-    pumpp = 4
-    # theta_raman = 0
-    theta_raman = -pi / 5
+    pumpp = 2
+    # pumpp = 4
+    theta_raman = 0
+    # theta_raman = -pi / 5
     ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
            (1 - exp(-1 / nstart)))
     rho0 = diag(r_[ps0, zeros(n + 1, dtype=complex128)])
@@ -252,6 +253,78 @@ def main_raman_sb_cooling2():
     # imshow(abs(rhos[-1]))
     # show()
 
+def main_raman_sb_cooling3():
+    # pumpp = 1
+    # theta_raman = 0
+    # [8, 5, 10, 5, 5, 7, 5, 3, 7, 5, 3, 9, 6, 4, 8, 4, 2, 6, 5, 5, 3, 7, 3,
+    #  7, 2, 6, 6, 4, 2, 8, 5, 3, 7, 2, 6, 5, 3, 1, 8, 6]
+    # 6.302077
+
+    # pumpp = 2
+    # theta_raman = 0
+    # [8, 6, 6, 6, 4, 8, 4, 7, 3, 6, 6, 4, 8, 3, 7, 5, 3, 10, 6, 3, 8, 2, 6,
+    #  4, 4, 2, 8, 5, 3, 2, 6, 4, 2, 8, 4, 2, 6, 2, 5, 3]
+    # 5.244526
+
+    # pumpp = 4
+    # theta_raman = -pi / 5
+    # [11, 9, 7, 13, 6, 10, 5, 9, 9, 5, 11, 7, 4, 12, 10, 6, 3, 10, 5, 12, 8,
+    #  4, 3, 11, 7, 5, 2, 10, 4, 12, 7, 3, 11, 5, 2, 9, 4, 3, 2, 10]
+    # 4.248303
+
+    n = 100
+    nstart = 30
+
+    # pumpp = 2
+    # theta_raman = 0
+    # dns = (exp(-arange(40) * 0.028) * 7.8).astype(int) 7.112772
+    # dns = (exp(-arange(40) * 0.025) * 8).astype(int) 6.451
+    # dns = (exp(-arange(40) * 0.022) * 8.2).astype(int) 5.848752
+    # dns = (exp(-arange(40) * 0.020) * 8.2).astype(int)
+    # dns = (exp(-arange(40) * 0.022) * 8.4).astype(int)
+    # dns = (exp(-arange(40) * 0.020) * 8.4).astype(int)
+    # dns_name = '(exp(-arange(40) * 0.020) * 8.4).astype(int)'
+    # dns = (exp(-arange(40) * 0.020) * 8.4).astype(int)
+
+    # pumpp = 4
+    # theta_raman = -pi / 5
+    # dns = exp(2.5 - arange(40) * 0.025).astype(int) 6.577263
+
+    ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
+           (1 - exp(-1 / nstart)))
+    rho0 = diag(r_[ps0, zeros(n + 1, dtype=complex128)])
+    rho_t = [rho0]
+
+    for i, dn in enumerate(dns):
+        print("iteration: %d, dn: %d" % (i, dn))
+        number = abs(sum(diag(rho0)))
+        ntotal_init = calc_total_n(rho0)
+        vmax = number**2 / ntotal_init
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal_init)
+        print("v: %f" % vmax)
+        ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
+                              theta_raman, pi / 2, pumpp, 0.05)
+        number = abs(sum(diag(rhos[-1])))
+        ntotal = calc_total_n(rhos[-1])
+        v = number**2 / ntotal
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal)
+        print("v: %f" % v)
+        print("n decreases: %f" % (ntotal_init - ntotal))
+        print('')
+        rho0 = rhos[-1]
+        rho_t.append(rho0)
+        print('\n')
+
+    print(dns_name, dns)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, rho)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, diag(rho))
+    # rho_t = array(rho_t)
+    # savetxt('p2_t0.txt', rho_t)
+
 def main_pump():
     n = 100
     gammas = gamma_pump(n, .8, pi / 2, 0.4, 0.02)
@@ -282,7 +355,7 @@ def main():
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
-    main_raman_sb_cooling2()
+    main_raman_sb_cooling3()
     pass
 
 if __name__ == '__main__':
