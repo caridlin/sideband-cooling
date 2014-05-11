@@ -10,7 +10,7 @@ def solve_ode(t0, y0, f, t1, h):
         raise ValueError
     ts = r_[t0:t1:h]
     nstep = len(ts)
-    ys = empty((nstep,) + y0.shape)
+    ys = empty((nstep,) + y0.shape, dtype=y0.dtype)
     ys[0] = y0
     h2 = h / 2
     h3 = h / 3
