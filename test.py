@@ -266,29 +266,80 @@ def main_raman_sb_cooling3():
     #  4, 4, 2, 8, 5, 3, 2, 6, 4, 2, 8, 4, 2, 6, 2, 5, 3]
     # 5.244526
 
-    # pumpp = 4
+    # pumpp = 2
     # theta_raman = -pi / 5
     # [11, 9, 7, 13, 6, 10, 5, 9, 9, 5, 11, 7, 4, 12, 10, 6, 3, 10, 5, 12, 8,
     #  4, 3, 11, 7, 5, 2, 10, 4, 12, 7, 3, 11, 5, 2, 9, 4, 3, 2, 10]
     # 4.248303
 
+    # pumpp = 4
+    # theta_raman = -pi / 5
+    # [11, 9, 7, 13, 11, 8, 6, 6, 13, 10, 5, 8, 4, 12, 6, 10, 5, 8, 4, 12, 6,
+    #  4, 10, 3, 8, 5, 13, 6, 4, 3, 10, 5, 3, 8, 4, 12, 6, 3, 5, 4]
+    # 6.325143
+
     n = 100
     nstart = 30
 
-    # pumpp = 2
-    # theta_raman = 0
+    # pumpp = 2 * ones(n)
+    theta_raman = 0
     # dns = (exp(-arange(40) * 0.028) * 7.8).astype(int) 7.112772
     # dns = (exp(-arange(40) * 0.025) * 8).astype(int) 6.451
     # dns = (exp(-arange(40) * 0.022) * 8.2).astype(int) 5.848752
-    # dns = (exp(-arange(40) * 0.020) * 8.2).astype(int)
-    # dns = (exp(-arange(40) * 0.022) * 8.4).astype(int)
-    # dns = (exp(-arange(40) * 0.020) * 8.4).astype(int)
-    # dns_name = '(exp(-arange(40) * 0.020) * 8.4).astype(int)'
-    # dns = (exp(-arange(40) * 0.020) * 8.4).astype(int)
+    # dns = (exp(-arange(40) * 0.020) * 8.2).astype(int) 5.675294
+    # dns = (exp(-arange(40) * 0.022) * 8.4).astype(int) 5.553641
+    # dns = (exp(-arange(40) * 0.020) * 8.4).astype(int) 5.547241
+    # dns = (exp(-arange(40) * 0.018) * 8.4).astype(int) 5.736700
+    # dns = (exp(-arange(40) * 0.020) * 8.6).astype(int) 5.478592
+    # dns = (exp(-arange(40) * 0.018) * 8.6).astype(int) 5.544554
+    # dns = (exp(-arange(40) * 0.020) * 9).astype(int) 5.299673
 
-    # pumpp = 4
+    # pumpp = 1 * exp(arange(20) * .09) 3.046997
+    # pumpp = 1.1 * exp(arange(20) * .08) 3.035428
+    # pumpp = .9 * exp(arange(20) * .1) 3.081284
+    # pumpp = .9 * exp(arange(20) * .08) 3.177622
+    # pumpp = 1.1 * exp(arange(20) * .1) 3.013128
+    # pumpp_name = '1.2 * exp(arange(20) * .1)' 3.039314
+    # pumpp_name = '1.2 * exp(arange(20) * .12)' 3.086417
+    # pumpp_name = '1.1 * exp(arange(20) * .12)' 3.028615
+    # pumpp_name = '1.1 * exp(arange(20) * .1) * arange(20)**0.05' 2.865663
+    # pumpp_name = '1.0 * exp(arange(20) * .1) * arange(20)**0.05' 2.860178
+    # pumpp_name = '0.9 * exp(arange(20) * .1) * arange(20)**0.05' 2.899644
+    # pumpp_name = '1.1 * exp(arange(20) * .1) * arange(20)**0.1' 3.040471
+    # pumpp_name = '1. * exp(arange(20) * .1) * arange(20)**0.1' 2.859388
+    # pumpp_name = '0.9 * exp(arange(20) * .1) * arange(20)**0.1' 2.869879
+    # pumpp_name = '1.05 * exp(arange(20) * .1) * arange(20)**0.15' 2.905376
+    # pumpp_name = '1. * exp(arange(20) * .1) * arange(20)**0.15' 2.880614
+    # pumpp_name = '1.05 * exp(arange(20) * .1) * arange(20)**0.1' 2.870642
+    # pumpp_name = '1.1 * exp(arange(20) * .1) * arange(20)**0.15' 2.938827
+    # pumpp_name = '1. * exp(arange(20) * .1) * arange(20)**0.15'
+    # pumpp_name = '1.1 * exp(arange(20) * .1) * arange(20)**0.1' 2.859388
+    # pumpp_name = '.9 * exp(arange(20) * .1) * arange(20)**0.15' 2.862172
+    # pumpp_name = '.95 * exp(arange(20) * .1) * arange(20)**0.15' 2.865720
+    # pumpp_name = '.9 * exp(arange(20) * .1) * arange(20)**0.1' 2.869879
+    # pumpp_name = '.95 * exp(arange(20) * .1) * arange(20)**0.1' 2.858590
+    # pumpp_name = '.95 * exp(arange(20) * .1) * arange(20)**0.1' 2.391270
+    # theta_raman = 0
+    # dns = (exp(-arange(80) * 0.020) * 9).astype(int) 3.325853
+    # dns = (exp(-arange(80) * 0.020) * 9.5).astype(int) 2.589682
+    # dns = (exp(-arange(80) * 0.020) * 10).astype(int) 2.391270
+    pumpp = eval(pumpp_name)
+
+    # pumpp = 2 * ones(n)
     # theta_raman = -pi / 5
+    # dns = exp(2.48 - arange(40) * 0.028).astype(int) 4.728015
+    # dns = exp(2.50 - arange(40) * 0.030).astype(int) 4.500523
+    # dns = exp(2.46 - arange(40) * 0.030).astype(int) 4.839641
+    # dns = exp(2.46 - arange(40) * 0.026).astype(int) 4.752056
+    # dns = exp(2.50 - arange(40) * 0.026).astype(int) 4.387730
+
+    # pumpp = 4 * ones(n)
+    # theta_raman = -pi / 5
+    # dns = exp(2.48 - arange(40) * 0.028).astype(int) 7.151005
     # dns = exp(2.5 - arange(40) * 0.025).astype(int) 6.577263
+    # dns = exp(2.52 - arange(40) * 0.022).astype(int) 6.347822
+
+    dns_name = '(exp(-arange(80) * 0.020) * 10).astype(int)'
 
     ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
            (1 - exp(-1 / nstart)))
@@ -304,7 +355,7 @@ def main_raman_sb_cooling3():
         print("total n: %f" % ntotal_init)
         print("v: %f" % vmax)
         ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
-                              theta_raman, pi / 2, pumpp, 0.05)
+                              theta_raman, pi / 2, pumpp[dn - 1], 0.05)
         number = abs(sum(diag(rhos[-1])))
         ntotal = calc_total_n(rhos[-1])
         v = number**2 / ntotal
@@ -317,13 +368,19 @@ def main_raman_sb_cooling3():
         rho_t.append(rho0)
         print('\n')
 
-    print(dns_name, dns)
+    print(dns_name)
+    print(pumpp_name)
     # for i, rho in enumerate(rho_t):
     #     print(i, rho)
     # for i, rho in enumerate(rho_t):
     #     print(i, diag(rho))
-    # rho_t = array(rho_t)
-    # savetxt('p2_t0.txt', rho_t)
+    rho_t = array(rho_t)
+    with open('res2.json', 'w') as fh:
+        import json
+        json.dump({'dns_name': dns_name,
+                   'pumpp_name': pumpp_name,
+                   'ps': [abs(diag(rho)).tolist() for rho in rho_t],
+                   'ns': [calc_total_n(rho) for rho in rho_t]}, fh)
 
 def main_pump():
     n = 100
