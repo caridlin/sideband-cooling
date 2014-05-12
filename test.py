@@ -342,6 +342,7 @@ def main_raman_sb_cooling3():
     # dns = (exp(-arange(80) * 0.020) * 10).astype(int) 2.391270
     # dns = (exp(-arange(80) * 0.020) * 11).astype(int) 1.992798
     # dns = (exp(-arange(80) * 0.020) * 12).astype(int) 1.742741
+    dns_name = '(exp(-arange(80) * 0.020) * 15).astype(int)'
     pumpp = eval(pumpp_name)
 
     # pumpp = 2 * ones(n)
@@ -358,7 +359,7 @@ def main_raman_sb_cooling3():
     # dns = exp(2.5 - arange(40) * 0.025).astype(int) 6.577263
     # dns = exp(2.52 - arange(40) * 0.022).astype(int) 6.347822
 
-    dns_name = '(exp(-arange(80) * 0.020) * 12).astype(int)'
+    dns = eval(dns_name)
 
     ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
            (1 - exp(-1 / nstart)))
@@ -394,7 +395,7 @@ def main_raman_sb_cooling3():
     # for i, rho in enumerate(rho_t):
     #     print(i, diag(rho))
     rho_t = array(rho_t)
-    with open('res4.json', 'w') as fh:
+    with open('res7.json', 'w') as fh:
         import json
         json.dump({'dns_name': dns_name,
                    'pumpp_name': pumpp_name,
@@ -430,10 +431,10 @@ def main_plot():
     from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
     from pylab import legend, title, savefig, close, grid
     import json
-
-    figure()
     with open('res4.json') as fh:
         res = json.load(fh)
+
+    figure()
     for i, p in enumerate(res['ps']):
         if (i + 1) % 20 == 0 or i == 0:
             p1 = (array(p[:len(p) // 2]) + p[len(p) // 2:])[:30]
@@ -443,6 +444,12 @@ def main_plot():
     grid()
     title("Energy level distribution\nat different time.")
     savefig('cool_process.png', bbox_inches='tight')
+
+    figure()
+    plot(res['ns'], linewidth=2, linestyle='-', marker='.')
+    grid()
+    title("Average $n$ as a function of time.")
+    savefig('n_decrease.png', bbox_inches='tight')
     # show()
 
 
@@ -453,8 +460,8 @@ def main():
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
-    # main_raman_sb_cooling3()
-    main_plot()
+    main_raman_sb_cooling3()
+    # main_plot()
     pass
 
 if __name__ == '__main__':
