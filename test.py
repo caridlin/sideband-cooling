@@ -51,6 +51,22 @@ def main_cooling():
     from pylab import legend, title, savefig, close, grid
 
     figure()
+    def plot_pump_mat(n, eta, n0):
+        plot(arange(n + 1), abs(pump_mat(n, .8, 0))[n0],
+             label='$\eta=%.2f, n_0=%d$' % (eta, n0), linewidth=2,
+             linestyle='-', marker='.')
+    plot_pump_mat(80, .8, 0)
+    plot_pump_mat(80, .8, 20)
+    plot_pump_mat(80, .8, 40)
+    plot_pump_mat(80, .8, 60)
+    xlabel('$n$')
+    legend()
+    grid()
+    title('Optical pumping branching faction\n($\\theta=0$)')
+    savefig('pump_0.8_0_curve.png', bbox_inches='tight')
+    close()
+
+    figure()
     imshow(abs(pump_mat(50, .8, 0)), origin='lower')
     xlabel('$n_1$')
     ylabel('$n_2$')
@@ -71,8 +87,8 @@ def main_cooling():
 
     figure()
     def plot_raman_mat(n, eta, dn):
-        plot(arange(dn, dn + n + 1), abs(raman_mat(n, eta, dn))**2,
-             label='$\eta=%.2f, \delta n=%d$' % (eta * 2, dn), linewidth=2,
+        plot(arange(dn, dn + n + 1), abs(raman_mat(n, eta, dn, 0))**2,
+             label='$\eta=%.2f, \delta n=%d$' % (eta, dn), linewidth=2,
              linestyle='-', marker='.')
     plot_raman_mat(140, .8, 20)
     plot_raman_mat(140, .8, 8)
@@ -83,7 +99,7 @@ def main_cooling():
     ylabel(r'$|\langle n|e^{ikr}|n-\delta n\rangle|^2$')
     legend()
     grid()
-    savefig('raman_0.8.png', bbox_inches='tight')
+    savefig('raman_0.8_1.png', bbox_inches='tight')
     close()
     # show()
 
@@ -319,10 +335,13 @@ def main_raman_sb_cooling3():
     # pumpp_name = '.9 * exp(arange(20) * .1) * arange(20)**0.1' 2.869879
     # pumpp_name = '.95 * exp(arange(20) * .1) * arange(20)**0.1' 2.858590
     # pumpp_name = '.95 * exp(arange(20) * .1) * arange(20)**0.1' 2.391270
+    pumpp_name = '.95 * exp(arange(20) * .1) * arange(20)**0.1'
     # theta_raman = 0
     # dns = (exp(-arange(80) * 0.020) * 9).astype(int) 3.325853
     # dns = (exp(-arange(80) * 0.020) * 9.5).astype(int) 2.589682
     # dns = (exp(-arange(80) * 0.020) * 10).astype(int) 2.391270
+    # dns = (exp(-arange(80) * 0.020) * 11).astype(int) 1.992798
+    # dns = (exp(-arange(80) * 0.020) * 12).astype(int) 1.742741
     pumpp = eval(pumpp_name)
 
     # pumpp = 2 * ones(n)
@@ -339,7 +358,7 @@ def main_raman_sb_cooling3():
     # dns = exp(2.5 - arange(40) * 0.025).astype(int) 6.577263
     # dns = exp(2.52 - arange(40) * 0.022).astype(int) 6.347822
 
-    dns_name = '(exp(-arange(80) * 0.020) * 10).astype(int)'
+    dns_name = '(exp(-arange(80) * 0.020) * 12).astype(int)'
 
     ps0 = (exp(-arange(n + 1, dtype=complex128) / nstart) *
            (1 - exp(-1 / nstart)))
@@ -375,7 +394,7 @@ def main_raman_sb_cooling3():
     # for i, rho in enumerate(rho_t):
     #     print(i, diag(rho))
     rho_t = array(rho_t)
-    with open('res2.json', 'w') as fh:
+    with open('res4.json', 'w') as fh:
         import json
         json.dump({'dns_name': dns_name,
                    'pumpp_name': pumpp_name,
@@ -408,11 +427,11 @@ def main_pump():
 def main():
     # main_sideband()
     # main_odt()
-    # main_cooling()
+    main_cooling()
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
-    main_raman_sb_cooling3()
+    # main_raman_sb_cooling3()
     pass
 
 if __name__ == '__main__':
