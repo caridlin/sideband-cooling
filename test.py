@@ -342,7 +342,9 @@ def main_raman_sb_cooling3():
     # dns = (exp(-arange(80) * 0.020) * 10).astype(int) 2.391270
     # dns = (exp(-arange(80) * 0.020) * 11).astype(int) 1.992798
     # dns = (exp(-arange(80) * 0.020) * 12).astype(int) 1.742741
-    dns_name = '(exp(-arange(80) * 0.020) * 15).astype(int)'
+    # dns_name = '(exp(-arange(80) * 0.020) * 13).astype(int)' 1.670308
+    # dns_name = '(exp(-arange(80) * 0.020) * 14).astype(int)' 1.727176
+    # dns_name = '(exp(-arange(80) * 0.020) * 15).astype(int)' 2.004741
     pumpp = eval(pumpp_name)
 
     # pumpp = 2 * ones(n)
@@ -431,7 +433,7 @@ def main_plot():
     from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
     from pylab import legend, title, savefig, close, grid
     import json
-    with open('res4.json') as fh:
+    with open('res5.json') as fh:
         res = json.load(fh)
 
     figure()
@@ -460,8 +462,8 @@ def main():
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
-    main_raman_sb_cooling3()
-    # main_plot()
+    # main_raman_sb_cooling3()
+    main_plot()
     pass
 
 if __name__ == '__main__':
