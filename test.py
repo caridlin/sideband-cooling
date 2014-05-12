@@ -454,6 +454,36 @@ def main_plot():
     savefig('n_decrease.png', bbox_inches='tight')
     # show()
 
+def main_animate():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid, xlim, ylim
+    from matplotlib import animation
+    import json
+    with open('res5.json') as fh:
+        res = json.load(fh)
+    ps = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res['ps']])
+
+    fig = figure()
+    line, = plot([], [], linewidth=2, linestyle='-', marker='.')
+    xlim(0, len(ps[0]))
+    ylim(0, ps.max())
+
+    def init():
+        line.set_data([], [])
+        return line,
+    def animate(i):
+        x = arange(len(ps[i]))
+        y = ps[i]
+        line.set_data(x, y)
+        return line,
+    anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                   frames=len(ps), interval=50, blit=True)
+    grid()
+    title("Energy level distribution evolution")
+    anim.save('cooling.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
+    show()
 
 def main():
     # main_sideband()
@@ -463,7 +493,8 @@ def main():
     # main_pump()
     # main_raman_sb_cooling()
     # main_raman_sb_cooling3()
-    main_plot()
+    # main_plot()
+    main_animate()
     pass
 
 if __name__ == '__main__':
