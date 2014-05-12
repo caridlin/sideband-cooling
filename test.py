@@ -424,14 +424,37 @@ def main_pump():
     imshow(abs(rhos[-1]))
     show()
 
+def main_plot():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid
+    import json
+
+    figure()
+    with open('res4.json') as fh:
+        res = json.load(fh)
+    for i, p in enumerate(res['ps']):
+        if (i + 1) % 20 == 0 or i == 0:
+            p1 = (array(p[:len(p) // 2]) + p[len(p) // 2:])[:30]
+            plot(p1, label="$t = %d$" % i, linewidth=2,
+                 linestyle='-', marker='.')
+    legend()
+    grid()
+    title("Energy level distribution\nat different time.")
+    savefig('cool_process.png', bbox_inches='tight')
+    # show()
+
+
 def main():
     # main_sideband()
     # main_odt()
-    main_cooling()
+    # main_cooling()
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
     # main_raman_sb_cooling3()
+    main_plot()
     pass
 
 if __name__ == '__main__':
