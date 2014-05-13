@@ -86,10 +86,22 @@
 \section{Introduction}
 Sideband cooling is a powerful technique for cooling confined particles, especially for ions in ion traps, to their ground states in both external and internal degrees of freedom. One of its variation, is also used in some experiment for cooling neutral atoms confined in an optical lattice\cite{sideband-cs-lattice} or a tightly focused tweezer optical dipole trap\cite{sideband-single-jila,sideband-single-cua}. Due to the heating from photon scattering, most of these experiments requires the particle to be confined to much smaller than an optical wavelength. Although this is possible to do for heavy atoms, e.g. Rubidium and Cesium, or ions, it is hard to get the same confinement for lighter neutral atoms like sodium.\\
 
-However, although the heating from optical pumping is faster with looser confinement, the strength of Raman transition to vibrational states much more than one level lower also increases ($\delta n\gg1$), which raise the possibility of faster cooling by driving Raman transition to take away more than one quanta of vibrational energy ($\hbar\omega$). In this paper, I am going to study the possibility of such cooling scheme using numerical stimulations and show that with carefully optimized cooling sequence, one can use this method to cool atoms with a relatively loose confinement and high initial temperature to its low vibrational states.
+Although the heating from optical pumping is faster with looser confinement, the strength of Raman transition to vibrational states much more than one level lower also increases ($\delta n\gg1$), which raises the possibility of faster cooling by driving Raman transition to take away more than one quanta of vibrational energy ($\hbar\omega$). In this paper, I am going to study the possibility of such cooling scheme using numerical stimulations and show that with carefully optimized cooling sequence, one can use this method to cool atoms with a relatively loose confinement and high initial temperature to its low vibrational states.
 
 \section{Theory of Raman sideband cooling}
+\subsection{Sideband and Lamb-Dicke factor}
+When a particle is confined in a harmonic potential, the spectrum of the external degrees of freedom become a series of discrete harmonic oscillator levels ($\hbar\omega$) as oppose to a continuum for free particles ($p^2/2m$). The effect of the coupling between the external and internal degrees of freedom also becomes discrete. As a result, instead of the Doppler effect and the recoil shift, the coupling to the external harmonic oscillator levels splits each of the transitions of the particle to a set of sidebands separated by the trapping frequency. The strength of the coupling can be calculated from the recoil of the photon, i.e. the phase gradient of the electric magnetic field,
+\eqar{
+  \frac{\Omega_{n,n'}}{\Omega}=&\abs{\langle n|\ue^{\ui kr}|n'\rangle}\\
+  =&\abs{\langle n|\ue^{\ui \eta\paren{a^\dagger+a}}|n'\rangle}
+}
+where $\Omega_{n,n'}$ is the Rabi frequency coupling two different vibrational states $n$ and $n'$, $\Omega$ is the original Rabi frequency for the internal transition, $k$ is the wave vector of the light, $a$ and $a^\dagger$ are the lowering and raising operators for the harmonic oscillator and $\eta$ is the Lamb-Dicke factor defined as,
+\eqar{
+  \eta=k\sqrt{\frac{\hbar}{2m\omega}}
+}
+We can easily see from the expression of the coupling strengh that in order to have strong couping between two levels, both of the harmonic oscillator wave functions must have a spatial extend comparable to the optical wavelength. Otherwise, the phase from the photon field will act as a global phase on the wavefunction and cannot create any coupling to other energy levels. The same expression also works for two-photon transitions, in which case the wave vector $k$ should be replaced by the difference between the wave vectors of the two photons.
 
+\subsection{Raman Sideband Cooling}
 
 \section{Simulation using Optical Bloch Equation}
 \begin{figure}
