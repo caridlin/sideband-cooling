@@ -56,13 +56,16 @@ def main_cooling():
              label='$\eta=%.2f, n_0=%d$' % (eta, n0), linewidth=2,
              linestyle='-', marker='.')
     plot_pump_mat(80, .8, 0)
+    plot_pump_mat(80, .8, 10)
     plot_pump_mat(80, .8, 20)
+    plot_pump_mat(80, .8, 30)
     plot_pump_mat(80, .8, 40)
+    plot_pump_mat(80, .8, 50)
     plot_pump_mat(80, .8, 60)
     xlabel('$n$')
     legend()
     grid()
-    title('Optical pumping branching faction\n($\\theta=0$)')
+    # title('Optical pumping branching faction\n($\\theta=0$)')
     savefig('pump_0.8_0_curve.png', bbox_inches='tight')
     close()
 
@@ -93,8 +96,8 @@ def main_cooling():
     plot_raman_mat(140, .8, 20)
     plot_raman_mat(140, .8, 8)
     plot_raman_mat(140, .8, 1)
-    title('Coupling ($|\\langle n|e^{ikr}|n-\\delta n\\rangle|^2$)\n'
-          'for different $\\delta n$ and $n$')
+    # title('Coupling ($|\\langle n|e^{ikr}|n-\\delta n\\rangle|^2$)\n'
+    #       'for different $\\delta n$ and $n$')
     xlabel('$n$')
     ylabel(r'$|\langle n|e^{ikr}|n-\delta n\rangle|^2$')
     legend()
@@ -442,15 +445,18 @@ def main_plot():
             p1 = (array(p[:len(p) // 2]) + p[len(p) // 2:])[:30]
             plot(p1, label="$t = %d$" % i, linewidth=2,
                  linestyle='-', marker='.')
+    xlabel('$n$')
     legend()
     grid()
-    title("Energy level distribution\nat different time.")
+    # title("Energy level distribution\nat different time.")
     savefig('cool_process.png', bbox_inches='tight')
 
     figure()
     plot(res['ns'], linewidth=2, linestyle='-', marker='.')
     grid()
-    title("Average $n$ as a function of time.")
+    xlabel('$t$')
+    ylabel('$n$')
+    # title("Average $n$ as a function of time.")
     savefig('n_decrease.png', bbox_inches='tight')
     # show()
 
@@ -488,13 +494,13 @@ def main_animate():
 def main():
     # main_sideband()
     # main_odt()
-    # main_cooling()
+    main_cooling()
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
     # main_raman_sb_cooling3()
     # main_plot()
-    main_animate()
+    # main_animate()
     pass
 
 if __name__ == '__main__':
