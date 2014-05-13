@@ -31,7 +31,7 @@ def main_sideband():
     show()
 
 def main_odt():
-    odt = ODT(3e-3, 589.3e-9, 1000e-9, NA=0.6)
+    odt = ODT(3e-3, 589.3e-9, 1000e-9, NA=0.55)
     print(odt)
     print()
     odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.3)
@@ -493,8 +493,8 @@ def main_animate():
 
 def main():
     # main_sideband()
-    # main_odt()
-    main_cooling()
+    main_odt()
+    # main_cooling()
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
