@@ -114,7 +114,6 @@ The simulation is going to be done on the cooling of the longitudinal degree of 
 
 In order to be closer to the real experimental condition, it also includes a $5\%$ heating effect from the optical pumping beam on the atoms in the dark state, which can come from the misalignment of the pumping beam with the magnetic field. The two Raman beams are sent in from radial and longitudinal directions instead of both in the more effecient longitudinal direction since one side of the axis may be blocked by the focusing lens for the optical dipole trap in the experiment.
 
-\subsection{Calculations of the coupling coefficients and Evolution of the density matrix}
 \begin{figure}
   \begin{center}
     \includegraphics[width=7cm]{../raman_0.8_1.png}
@@ -129,6 +128,7 @@ In order to be closer to the real experimental condition, it also includes a $5\
   \caption{Possibilities of going in to other vibrational states (i.e. heating) during optical pumping for different initial level $n_0$. The pumping beam is sent in from the orthogonal direction.}
   \label{fig-pump-curve}
 \end{figure}
+\subsection{Calculations of the coupling coefficients}
 In order to simulate the evolution of the system, it is necessary to calculate the strength of the sideband, i.e. the coupling between different vibrational levels. For the Raman transition, this can be directly calculated from equation \ref{lamb-dicke} and the result is shown in figure \ref{fig-raman-curve}. As we can see, due to the large Lamb-Dicke factor, there is significant coupling to lower vibrational state even for $\delta n$ as large as $8$.\\
 
 For the optical pumping, since the scattered photon does not have a defined wave vector, in order to calculate the coupling to the vibrational states, one need to average over all different directions of the scattered photon. For pumping along the radial direction, the couplings between vibrational states are,
@@ -138,14 +138,6 @@ For the optical pumping, since the scattered photon does not have a defined wave
 }
 where $\Gamma_{n,n'}$ is the pumping rate from state $n$ to $n'$, $\Gamma$ is the original pumping rate for free atoms, and $\eta$ the Lamb-Dicke factor for the light along the direction of the confinement. The result of the calculation is shown in figure \ref{fig-pump-curve}. We can see that the heating, i.e. spread in $n$, is greater for the less confined higher vibrational levels. Moreover, because of the average over scatterred photon direction, the atom still has a large possibility of staying in the state $n=0$ after optical pumping.
 
-\section{Results of the simulation}
-\begin{figure}
-  \begin{center}
-    \includegraphics[width=7cm]{../cool_process.png}
-  \end{center}
-  \caption{Distribution in vibrational levels (including both hyperfine ground states) at different time. States with $n>30$ are not shown in the figure.}
-  \label{fig-cool-process}
-\end{figure}
 \begin{figure}
   \begin{center}
     \includegraphics[width=7cm]{../n_decrease.png}
@@ -153,8 +145,28 @@ where $\Gamma_{n,n'}$ is the pumping rate from state $n$ to $n'$, $\Gamma$ is th
   \caption{Decrease of $n$ during the cooling process.}
   \label{fig-n-decrease}
 \end{figure}
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=7cm]{../cool_process.png}
+  \end{center}
+  \caption{Distribution in vibrational levels (including both hyperfine ground states) at different time. States with $n>30$ are not shown in the figure.}
+  \label{fig-cool-process}
+\end{figure}
+\subsection{Evolution of the density matrix}
+The evolution of the density matrix, including both the coherent Raman transition and the ``non-coherent'' optical pumping, is governed by the optical Bloch equation.
+\eqar{
+  \diff{\rho_{ij}}{t}=&-\frac12\sum_k\paren{\Gamma_{ki}+\Gamma_{kj}}\rho_{ij}+\ui\sum_k\paren{\rho_{ik}\Omega_{kj}-\rho_{kj}\Omega_{ik}}\\
+  \diff{\rho_{ii}}{t}=&\sum_k\rho_{kk}\Gamma_{ik}-\sum_k\Gamma_{ki}\rho_{ii}+\ui\sum_k\paren{\rho_{ik}\Omega_{ki}-\rho_{ki}\Omega_{ik}}
+}
+where $\Gamma_{ij}$ and $\Omega_{ij}$ are the pumping rate and the Rabi frequency of the Raman transition between states $i$ and $j$ respectively. Since in the weak coupling limit, i.e. when the off resonance coupling is negligible, the only two time scales are the $\Gamma$'s and $\Omega$'s, we normalize the maximum Rabi frequency to $1$ in the simulation.
 
-\section{Conclusion.}
+\section{Results of the simulation}
+The simulation of the Raman sideband cooling is done by minimizing the average vibrational levels after a certain time. The free parameters in the simulation are the $\delta n$ for the Raman transition and the relative rate of the optical pumping $\Gamma/\Omega$. In order to get a stable and reliable simulation result, the change of these parameters are limited to smooth functions, which are further limited to exponential decays in this simulation for simplicity.\\
+
+The result of this simple optimization is a sequence with $\delta n$ decreases from $12$ to $2$ and with the optical pumping rate decreases from $2$ to $1$. Figure \ref{fig-n-decrease} shows the change in the average vibrational levels during the cooling process. We can clearly see that even if the Lamb-Dicke factor is large and we started with a high tempeature, the Raman sideband cooling with $\delta n\gg1$ can still efficiently cool the atom in the trap to $12$ times colder then the initial temperature. Figure \ref{fig-cool-process} is the energy level distribution at different time which shows that more than $75\%$ of the atoms are in the two lowest vibrational levels at the end of the cooling.
+
+\section{Conclusion}
+In this paper, I have shown with numerical simulation of the optical Bloch equation that Raman sideband cooling with $\delta n\gg1$ can be used to effeciently cool neutral atoms in a optical dipole trap with $\eta\approx1$ and high initial temperature. Future improvement of this might include automatic optimization of the sequence and also the simulation of cooling in all three dimensions.
 
 \bibliography{paper}
 \end{document}
