@@ -91,9 +91,9 @@ Although the heating from optical pumping is faster with looser confinement, the
 \section{Theory of Raman sideband cooling}
 \subsection{Sideband and Lamb-Dicke factor}
 When a particle is confined in a harmonic potential, the spectrum of the external degrees of freedom become a series of discrete harmonic oscillator levels ($\hbar\omega$) as oppose to a continuum for free particles ($p^2/2m$). The effect of the coupling between the external and internal degrees of freedom also becomes discrete. As a result, instead of the Doppler effect and the recoil shift, the coupling to the external harmonic oscillator levels splits each of the transitions of the particle to a set of sidebands separated by the trapping frequency. The strength of the coupling can be calculated from the recoil of the photon, i.e. the phase gradient of the electric magnetic field,
-\eqar{
+\eqarn{
   \frac{\Omega_{n,n'}}{\Omega}=&\abs{\langle n|\ue^{\ui kr}|n'\rangle}\\
-  =&\abs{\langle n|\ue^{\ui \eta\paren{a^\dagger+a}}|n'\rangle}
+  =&\abs{\langle n|\ue^{\ui \eta\paren{a^\dagger+a}}|n'\rangle}\label{lamb-dicke}
 }
 where $\Omega_{n,n'}$ is the Rabi frequency coupling two different vibrational states $n$ and $n'$, $\Omega$ is the original Rabi frequency for the internal transition, $k$ is the wave vector of the light, $a$ and $a^\dagger$ are the lowering and raising operators for the harmonic oscillator and $\eta$ is the Lamb-Dicke factor defined as,
 \eqar{
@@ -104,12 +104,17 @@ We can easily see from the expression of the coupling strengh that in order to h
 \subsection{Raman Sideband Cooling}
 Since the harmonic confinement turns the spectrum of external motion into discrete bands, one can drive transitions between these levels with narrow band lasers for cooling. This can be done with normal optical transition in an ion trap with a trapping frequency of several $MHz$ but is usually done with a narrow Raman transition for neutral atoms in an optical trap, hence the name Raman sideband cooling.\\
 
-The Raman sideband cooling of atoms requires two ground states that can be coupled through a Raman transition. The atoms first start in one of the ground states $|1\rangle$. Two Raman beams red detuned by $\delta n\omega$ to the original Raman resonance are used to transfer the atoms into the other ground state $|2\rangle$ at a vibrational state $\delta n$ levels lower. An optical pumping beam is then used to pump the atom in the state $|2\rangle$ back to state $|1\rangle$ and the cycle is repeated. In order for the cooling to work efficiently, the optical pumping beam must not introduce more heating (changes in vibrational levels) on average than the vibrational energy taken out by the Raman transition. This is usually done by tightly confine the particles and therefore decrease the probability of going into another vibrational level. However, if it is not practical to provide enough confinement in the experiment, e.g. for light atoms, one can also increasing the cooling effect from the Raman transition by using $\delta n>1$ and this is what I am going to study in the following sections.
+The Raman sideband cooling of atoms requires two ground states that can be coupled through a Raman transition. Examples of such states used in experiments include hyperfine states or different Zeeman levels in a magnetic field. The atoms first start in one of the ground states $|1\rangle$. Two Raman beams red detuned by $\delta n\omega$ to the original Raman resonance are used to transfer the atoms into the other ground state $|2\rangle$ at a vibrational state $\delta n$ levels lower. An optical pumping beam is then used to pump the atom in the state $|2\rangle$ back to state $|1\rangle$ and the cycle is repeated. In order for the cooling to work efficiently, the optical pumping beam must not introduce more heating (changes in vibrational levels) on average than the vibrational energy taken out by the Raman transition. This is usually done by tightly confine the particles and therefore decrease the probability of going into another vibrational level. However, if it is not practical to provide enough confinement in the experiment, e.g. for light atoms, one can also increasing the cooling effect from the Raman transition by using $\delta n>1$ and this is what I am going to study in the following sections.
 
 \section{Simulation using Optical Bloch Equation}
 \subsection{The system to simulate}
-\subsection{Calculations of the coupling coefficients}
-\subsection{Evolution of the density matrix}
+In order to study the Raman sideband cooling scheme, I am going to simulate a simple system, a single atom trapped in a tightly confined tweezer trap. It is similar to the ones realized recently in the experiment at JILA\cite{sideband-single-jila} and Harvard\cite{sideband-single-cua}. However, instead of using the heavy Rubidium atoms, the atom used in this simulation is the much lighter Soldium atom.\\
+
+The simulation is going to be done on the cooling of the longitudinal degree of freedom for a soldium atom trapped in a optical dipole trap created by focusing a $3\text{mW}$ $\lambda=1064\text{nm}$ laser with numerical aperture $NA=0.55$. The Lamb-Dicke factor for the $D$ lines along the longitudinal direction is $\eta\approx0.8$. The two states used for the Raman transition are the $F=2, m_F=-2$ and $F=1, m_F=-1$ hyperfine states with dark state pumping with $\sigma^-$ light on the $D1$ line to pump atoms from $F=1, m_F=-1$ back to $F=2, m_F=-2$. The initial temperature of the atom in the trap is $T=30\hbar\omega/k_B\approx50\mu K$, which is closed to the temperature achievable by polarization gradient cooling for soldium.\\
+
+In order to be closer to the real experimental condition, it also includes a $5\%$ heating effect from the optical pumping beam on the atoms in the dark state, which can come from the misalignment of the pumping beam with the magnetic field. The two Raman beams are sent in from radial and longitudinal directions instead of both in the more effecient longitudinal direction since one side of the axis may be blocked by the focusing lens for the optical dipole trap in the experiment.
+
+\subsection{Calculations of the coupling coefficients and Evolution of the density matrix}
 \begin{figure}
   \begin{center}
     \includegraphics[width=7cm]{../raman_0.8_1.png}
@@ -121,9 +126,17 @@ The Raman sideband cooling of atoms requires two ground states that can be coupl
   \begin{center}
     \includegraphics[width=7cm]{../pump_0.8_0_curve.png}
   \end{center}
-  \caption{Possibilities of going in to other vibrational states (i.e. heating) during optical pumping. The pumping beam is sent in from the orthogonal direction.}
+  \caption{Possibilities of going in to other vibrational states (i.e. heating) during optical pumping for different initial level $n_0$. The pumping beam is sent in from the orthogonal direction.}
   \label{fig-pump-curve}
 \end{figure}
+In order to simulate the evolution of the system, it is necessary to calculate the strength of the sideband, i.e. the coupling between different vibrational levels. For the Raman transition, this can be directly calculated from equation \ref{lamb-dicke} and the result is shown in figure \ref{fig-raman-curve}. As we can see, due to the large Lamb-Dicke factor, there is significant coupling to lower vibrational state even for $\delta n$ as large as $8$.\\
+
+For the optical pumping, since the scattered photon does not have a defined wave vector, in order to calculate the coupling to the vibrational states, one need to average over all different directions of the scattered photon. For pumping along the radial direction, the couplings between vibrational states are,
+\eqar{
+  \frac{\Gamma_{n,n'}}{\Gamma}=&\frac{1}{4\pi}\int_{0}^{2\pi}\ud\varphi\int_{-\frac\pi2}^{\frac\pi2}\ud\theta\cos\theta\abs{\langle n|\ue^{\ui\eta\paren{a+a^\dagger}\sin\theta}|n'\rangle}^2\\
+  =&\int_{0}^{1}\ud x\abs{\langle n|\ue^{\ui\eta\paren{a+a^\dagger}x}|n'\rangle}^2
+}
+where $\Gamma_{n,n'}$ is the pumping rate from state $n$ to $n'$, $\Gamma$ is the original pumping rate for free atoms, and $\eta$ the Lamb-Dicke factor for the light along the direction of the confinement. The result of the calculation is shown in figure \ref{fig-pump-curve}. We can see that the heating, i.e. spread in $n$, is greater for the less confined higher vibrational levels. Moreover, because of the average over scatterred photon direction, the atom still has a large possibility of staying in the state $n=0$ after optical pumping.
 
 \section{Results of the simulation}
 \begin{figure}
