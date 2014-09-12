@@ -516,7 +516,7 @@ def main_raman_sb_cooling5():
 def main_raman_sb_cooling6():
     theta_raman = 0
 
-    pumpp_name = '[.1]'
+    pumpp_name = '[.2]'
     dns_name = '(ones(100)).astype(int)'
     pumpp = eval(pumpp_name)
     dns = eval(dns_name)
@@ -536,7 +536,9 @@ def main_raman_sb_cooling6():
         print("total n: %f" % ntotal_init)
         print("v: %f" % vmax)
         ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
-                              theta_raman, pi / 2, pumpp[dn - 1], 0.05)
+                              theta_raman, pi / 2, pumpp[dn - 1], 0.01)
+        # ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
+        #                       theta_raman, pi / 2, pumpp[dn - 1], 0.05)
         number = abs(sum(diag(rhos[-1])))
         ntotal = calc_total_n(rhos[-1])
         v = number**2 / ntotal
@@ -556,7 +558,7 @@ def main_raman_sb_cooling6():
     # for i, rho in enumerate(rho_t):
     #     print(i, diag(rho))
     rho_t = array(rho_t)
-    with open('res28.json', 'w') as fh:
+    with open('res29.json', 'w') as fh:
         import json
         json.dump({'dns_name': dns_name,
                    'pumpp_name': pumpp_name,
@@ -735,7 +737,7 @@ def main_animate4():
         res2 = json.load(fh)
     with open('res26.json') as fh:
         res3 = json.load(fh)
-    with open('res28.json') as fh:
+    with open('res29.json') as fh:
         res4 = json.load(fh)
     ps1 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res1['ps']])
     ps2 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res2['ps']])
@@ -760,7 +762,7 @@ def main_animate4():
                                    frames=len(ps), interval=50, blit=True)
     grid()
     title("Energy level distribution evolution")
-    anim.save('cooling4.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
+    # anim.save('cooling4.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
     show()
 
 def main():
