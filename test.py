@@ -31,18 +31,18 @@ def main_sideband():
     show()
 
 def main_odt():
-    odt = ODT(3e-3, 589.3e-9, 1000e-9, NA=0.55)
-    print(odt)
-    print()
-    odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.3)
-    print(odt)
-    print()
+    # odt = ODT(.5e-3, 589.3e-9, 650e-9, NA=0.55)
+    # print(odt)
+    # print()
+    # odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.3)
+    # print(odt)
+    # print()
     odt = ODT(5e-3, 589.3e-9, 1000e-9, NA=0.4)
     print(odt)
     print()
-    odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.4)
-    print(odt)
-    print()
+    # odt = ODT(10e-3, 589.3e-9, 1000e-9, NA=0.4)
+    # print(odt)
+    # print()
 
 def main_cooling():
     __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
@@ -345,7 +345,7 @@ def main_raman_sb_cooling3():
     # dns = (exp(-arange(80) * 0.020) * 10).astype(int) 2.391270
     # dns = (exp(-arange(80) * 0.020) * 11).astype(int) 1.992798
     # dns = (exp(-arange(80) * 0.020) * 12).astype(int) 1.742741
-    # dns_name = '(exp(-arange(80) * 0.020) * 13).astype(int)' 1.670308
+    dns_name = '(exp(-arange(80) * 0.020) * 13).astype(int)' # 1.670308
     # dns_name = '(exp(-arange(80) * 0.020) * 14).astype(int)' 1.727176
     # dns_name = '(exp(-arange(80) * 0.020) * 15).astype(int)' 2.004741
     pumpp = eval(pumpp_name)
@@ -400,12 +400,170 @@ def main_raman_sb_cooling3():
     # for i, rho in enumerate(rho_t):
     #     print(i, diag(rho))
     rho_t = array(rho_t)
-    with open('res7.json', 'w') as fh:
+    with open('res9.json', 'w') as fh:
         import json
         json.dump({'dns_name': dns_name,
                    'pumpp_name': pumpp_name,
                    'ps': [abs(diag(rho)).tolist() for rho in rho_t],
-                   'ns': [calc_total_n(rho) for rho in rho_t]}, fh)
+                   'ns': [calc_total_n(rho) for rho in rho_t],
+                   'rho0.real': rho0.real.tolist(),
+                   'rho0.imag': rho0.imag.tolist()}, fh)
+
+def main_raman_sb_cooling4():
+    theta_raman = 0
+
+    pumpp_name = '.65 * exp(arange(20) * .1) * arange(20)**0.12'
+    dns_name = '(ones(100) * 3).astype(int)'
+    pumpp = eval(pumpp_name)
+    dns = eval(dns_name)
+
+    with open('res9.json', 'r') as fh:
+        import json
+        d = json.load(fh)
+    rho0 = array(d['rho0.real']) + 1j * array(d['rho0.imag'])
+    rho_t = [rho0]
+
+    for i, dn in enumerate(dns):
+        print("iteration: %d, dn: %d" % (i, dn))
+        number = abs(sum(diag(rho0)))
+        ntotal_init = calc_total_n(rho0)
+        vmax = number**2 / ntotal_init
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal_init)
+        print("v: %f" % vmax)
+        ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
+                              theta_raman, pi / 2, pumpp[dn - 1], 0.05)
+        number = abs(sum(diag(rhos[-1])))
+        ntotal = calc_total_n(rhos[-1])
+        v = number**2 / ntotal
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal)
+        print("v: %f" % v)
+        print("n decreases: %f" % (ntotal_init - ntotal))
+        print('')
+        rho0 = rhos[-1]
+        rho_t.append(rho0)
+        print('\n')
+
+    print(dns_name)
+    print(pumpp_name)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, rho)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, diag(rho))
+    rho_t = array(rho_t)
+    with open('res24.json', 'w') as fh:
+        import json
+        json.dump({'dns_name': dns_name,
+                   'pumpp_name': pumpp_name,
+                   'ps': [abs(diag(rho)).tolist() for rho in rho_t],
+                   'ns': [calc_total_n(rho) for rho in rho_t],
+                   'rho0.real': rho0.real.tolist(),
+                   'rho0.imag': rho0.imag.tolist()}, fh)
+
+def main_raman_sb_cooling5():
+    theta_raman = 0
+
+    pumpp_name = '.3 * exp(arange(20) * .1) * arange(20)**0.12'
+    dns_name = '(ones(100) * 2).astype(int)'
+    pumpp = eval(pumpp_name)
+    dns = eval(dns_name)
+
+    with open('res24.json', 'r') as fh:
+        import json
+        d = json.load(fh)
+    rho0 = array(d['rho0.real']) + 1j * array(d['rho0.imag'])
+    rho_t = [rho0]
+
+    for i, dn in enumerate(dns):
+        print("iteration: %d, dn: %d" % (i, dn))
+        number = abs(sum(diag(rho0)))
+        ntotal_init = calc_total_n(rho0)
+        vmax = number**2 / ntotal_init
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal_init)
+        print("v: %f" % vmax)
+        ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
+                              theta_raman, pi / 2, pumpp[dn - 1], 0.05)
+        number = abs(sum(diag(rhos[-1])))
+        ntotal = calc_total_n(rhos[-1])
+        v = number**2 / ntotal
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal)
+        print("v: %f" % v)
+        print("n decreases: %f" % (ntotal_init - ntotal))
+        print('')
+        rho0 = rhos[-1]
+        rho_t.append(rho0)
+        print('\n')
+
+    print(dns_name)
+    print(pumpp_name)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, rho)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, diag(rho))
+    rho_t = array(rho_t)
+    with open('res26.json', 'w') as fh:
+        import json
+        json.dump({'dns_name': dns_name,
+                   'pumpp_name': pumpp_name,
+                   'ps': [abs(diag(rho)).tolist() for rho in rho_t],
+                   'ns': [calc_total_n(rho) for rho in rho_t],
+                   'rho0.real': rho0.real.tolist(),
+                   'rho0.imag': rho0.imag.tolist()}, fh)
+
+def main_raman_sb_cooling6():
+    theta_raman = 0
+
+    pumpp_name = '[.1]'
+    dns_name = '(ones(100)).astype(int)'
+    pumpp = eval(pumpp_name)
+    dns = eval(dns_name)
+
+    with open('res26.json', 'r') as fh:
+        import json
+        d = json.load(fh)
+    rho0 = array(d['rho0.real']) + 1j * array(d['rho0.imag'])
+    rho_t = [rho0]
+
+    for i, dn in enumerate(dns):
+        print("iteration: %d, dn: %d" % (i, dn))
+        number = abs(sum(diag(rho0)))
+        ntotal_init = calc_total_n(rho0)
+        vmax = number**2 / ntotal_init
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal_init)
+        print("v: %f" % vmax)
+        ts, rhos = evolve_rho(rho0, 2, 0.1, 0.8, dn, 0.4, 0,
+                              theta_raman, pi / 2, pumpp[dn - 1], 0.05)
+        number = abs(sum(diag(rhos[-1])))
+        ntotal = calc_total_n(rhos[-1])
+        v = number**2 / ntotal
+        print("atom number: %f" % number)
+        print("total n: %f" % ntotal)
+        print("v: %f" % v)
+        print("n decreases: %f" % (ntotal_init - ntotal))
+        print('')
+        rho0 = rhos[-1]
+        rho_t.append(rho0)
+        print('\n')
+
+    print(dns_name)
+    print(pumpp_name)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, rho)
+    # for i, rho in enumerate(rho_t):
+    #     print(i, diag(rho))
+    rho_t = array(rho_t)
+    with open('res28.json', 'w') as fh:
+        import json
+        json.dump({'dns_name': dns_name,
+                   'pumpp_name': pumpp_name,
+                   'ps': [abs(diag(rho)).tolist() for rho in rho_t],
+                   'ns': [calc_total_n(rho) for rho in rho_t],
+                   'rho0.real': rho0.real.tolist(),
+                   'rho0.imag': rho0.imag.tolist()}, fh)
 
 def main_pump():
     n = 100
@@ -491,16 +649,136 @@ def main_animate():
     anim.save('cooling.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
     show()
 
+def main_animate2():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid, xlim, ylim
+    from matplotlib import animation
+    import json
+    with open('res5.json') as fh:
+        res1 = json.load(fh)
+    with open('res24.json') as fh:
+        res2 = json.load(fh)
+    ps1 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res1['ps']])
+    ps2 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res2['ps']])
+    ps = r_[ps1, ps2]
+
+    fig = figure()
+    line, = plot([], [], linewidth=2, linestyle='-', marker='.')
+    xlim(0, len(ps[0]))
+    ylim(0, ps.max())
+
+    def init():
+        line.set_data([], [])
+        return line,
+    def animate(i):
+        x = arange(len(ps[i]))
+        y = ps[i]
+        line.set_data(x, y)
+        return line,
+    anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                   frames=len(ps), interval=50, blit=True)
+    grid()
+    title("Energy level distribution evolution")
+    # anim.save('cooling2.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
+    show()
+
+def main_animate3():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid, xlim, ylim
+    from matplotlib import animation
+    import json
+    with open('res5.json') as fh:
+        res1 = json.load(fh)
+    with open('res24.json') as fh:
+        res2 = json.load(fh)
+    with open('res26.json') as fh:
+        res3 = json.load(fh)
+    ps1 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res1['ps']])
+    ps2 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res2['ps']])
+    ps3 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res3['ps']])
+    ps = r_[ps1, ps2, ps3]
+
+    fig = figure()
+    line, = plot([], [], linewidth=2, linestyle='-', marker='.')
+    xlim(0, len(ps[0]))
+    ylim(0, ps.max())
+
+    def init():
+        line.set_data([], [])
+        return line,
+    def animate(i):
+        x = arange(len(ps[i]))
+        y = ps[i]
+        line.set_data(x, y)
+        return line,
+    anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                   frames=len(ps), interval=50, blit=True)
+    grid()
+    title("Energy level distribution evolution")
+    # anim.save('cooling2.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
+    show()
+
+def main_animate4():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid, xlim, ylim
+    from matplotlib import animation
+    import json
+    with open('res5.json') as fh:
+        res1 = json.load(fh)
+    with open('res24.json') as fh:
+        res2 = json.load(fh)
+    with open('res26.json') as fh:
+        res3 = json.load(fh)
+    with open('res28.json') as fh:
+        res4 = json.load(fh)
+    ps1 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res1['ps']])
+    ps2 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res2['ps']])
+    ps3 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res3['ps']])
+    ps4 = array([array(p[:len(p) // 2]) + p[len(p) // 2:] for p in res4['ps']])
+    ps = r_[ps1, ps2, ps3, ps4]
+
+    fig = figure()
+    line, = plot([], [], linewidth=2, linestyle='-', marker='.')
+    xlim(0, len(ps[0]))
+    ylim(0, ps.max())
+
+    def init():
+        line.set_data([], [])
+        return line,
+    def animate(i):
+        x = arange(len(ps[i]))
+        y = ps[i]
+        line.set_data(x, y)
+        return line,
+    anim = animation.FuncAnimation(fig, animate, init_func=init,
+                                   frames=len(ps), interval=50, blit=True)
+    grid()
+    title("Energy level distribution evolution")
+    anim.save('cooling4.mp4', fps=20, extra_args=['-vcodec', 'libx264'])
+    show()
+
 def main():
     # main_sideband()
-    main_odt()
+    # main_odt()
     # main_cooling()
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
     # main_raman_sb_cooling3()
+    # main_raman_sb_cooling4()
+    # main_raman_sb_cooling5()
+    # main_raman_sb_cooling6()
     # main_plot()
     # main_animate()
+    # main_animate2()
+    # main_animate3()
+    main_animate4()
     pass
 
 if __name__ == '__main__':
