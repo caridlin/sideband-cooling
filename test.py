@@ -9,6 +9,16 @@ from cooling import gamma_pump, omega_raman, evolve_rho
 from ode import solve_ode
 from numpy import *
 
+def _load_jsons(fnames, field):
+    import json
+    if isinstance(fnames, str):
+        fnames = [fnames]
+    res = []
+    for fname in fnames:
+        with open(fname) as fh:
+            res.extend(json.load(fh)[field])
+    return res
+
 def plot_strength(n0, dn, eta, theta0, scatter=True):
     ns = r_[max(n0 - dn, 0):n0 + dn]
     if scatter:
@@ -620,6 +630,37 @@ def main_plot():
     savefig('n_decrease.png', bbox_inches='tight')
     # show()
 
+def main_plot2():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid
+    names = ['res5.json', 'res24.json', 'res26.json', 'res29.json']
+    ps = _load_jsons(names, 'ps')
+    ns = _load_jsons(names, 'ns')
+
+    figure()
+    for i in r_[0:len(ps) - 1:7j]:
+        i = int(i)
+        p = ps[i]
+        p1 = (array(p[:len(p) // 2]) + p[len(p) // 2:])[:10]
+        plot(p1, label="$t = %d$" % i, linewidth=2,
+             linestyle='-', marker='.')
+    xlabel('$n$')
+    legend()
+    grid()
+    title("Energy level distribution\nat different time.")
+    savefig('cool_process85.png', bbox_inches='tight')
+
+    figure()
+    plot(ns, linewidth=2, linestyle='-', marker='.')
+    grid()
+    xlabel('$t$')
+    ylabel('$n$')
+    title("Average $n$ as a function of time.")
+    savefig('n_decrease85.png', bbox_inches='tight')
+    show()
+
 def main_animate():
     __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
                                               'axes.titlesize': 20})
@@ -777,10 +818,11 @@ def main():
     # main_raman_sb_cooling5()
     # main_raman_sb_cooling6()
     # main_plot()
+    main_plot2()
     # main_animate()
     # main_animate2()
     # main_animate3()
-    main_animate4()
+    # main_animate4()
     pass
 
 if __name__ == '__main__':
