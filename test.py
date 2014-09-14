@@ -785,8 +785,8 @@ def main_plot4():
     ps = _load_jsons(names, 'ps')
     ns = _load_jsons(names, 'ns')
 
-    size = 20
-    t_size = 50
+    size = 100
+    t_size = 100
 
     fig = mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
 
@@ -807,7 +807,7 @@ def main_plot4():
     ax0.axes.x_axis_visibility = False
     ax0.axes.y_axis_visibility = False
     ax0.axes.z_axis_visibility = True
-    ax0.axes.number_of_labels = 6
+    ax0.axes.number_of_labels = 3
     ax0.axes.use_data_bounds = False
     ax0.axes.bounds = [0, size, 0, size, 0, size]
     ax0.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
@@ -841,6 +841,9 @@ def main_plot4():
     ax2.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
     ax2.axes.use_ranges = True
     ax2.axes.label_format = '%.0f'
+    ax2.title_text_property.vertical_justification = 'center'
+    ax2.label_text_property.vertical_justification = 'center'
+    ax2.label_text_property.justification = 'right'
 
     mlab.outline(surf, color=(0., 0., 0.),
                  extent=[0, size, 0, size, 0, size])
