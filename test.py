@@ -747,6 +747,113 @@ def main_plot3():
     # title("Energy level distribution\nat different time.")
     # # savefig('cool_process85.png', bbox_inches='tight')
 
+def new_axis(fig=None):
+    from mayavi.modules.axes import Axes
+    from mayavi.tools.engine_manager import get_engine, engine_manager
+    from mayavi.tools.figure import gcf
+    scene = gcf()
+    if fig is None:
+        engine = get_engine()
+    else:
+        engine = engine_manager.find_figure_engine(fig)
+        engine.current_scene = fig
+
+    if scene.scene is not None:
+        scene.scene.disable_render = True
+    parent = engine.current_object
+
+    # Try to find an existing module, if not add one to the pipeline
+    if parent == None:
+        target = scene
+    else:
+        target = parent
+
+    ax = Axes()
+
+    engine.add_module(ax, obj=parent)
+
+    if scene.scene is not None:
+        scene.scene.disable_render = False
+    return ax
+
+def main_plot4():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from mayavi import mlab
+
+    names = ['res5.json', 'res24.json', 'res26.json', 'res29.json']
+    ps = _load_jsons(names, 'ps')
+    ns = _load_jsons(names, 'ns')
+    print(len(ps[0]))
+
+    size = 100
+    t_size = 100
+
+    fig = mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
+
+    T_fine = r_[0:len(ps) - 1:(t_size + 1) * 1j].astype(int)
+    N_fine = r_[:size + 1]
+    T_fine, N_fine = np.meshgrid(T_fine, N_fine)
+
+    P_all = array([(array(p[:len(p) // 2]) + p[len(p) // 2:]) for p in ps])
+    P_fine = P_all[T_fine, N_fine]
+    surf = mlab.barchart(P_fine * size, colormap='blue-red',
+                         extent=[0, size, 0, size, 0, 1], figure=fig)
+    # surf.module_manager.scalar_lut_manager.reverse_lut = True
+
+    ax0 = new_axis(fig)
+    ax0.axes.x_label = "State (n)"
+    ax0.axes.y_label = "Time"
+    ax0.axes.z_label = "Population"
+    ax0.axes.x_axis_visibility = True
+    ax0.axes.y_axis_visibility = False
+    ax0.axes.z_axis_visibility = False
+    ax0.axes.number_of_labels = 6
+    ax0.axes.use_data_bounds = False
+    ax0.axes.bounds = [0, size, 0, size, 0, size]
+    ax0.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
+    ax0.axes.use_ranges = True
+    ax0.label_text_property.font_size = 3
+    ax0.axes.label_format = '%.1f'
+
+    ax1 = new_axis(fig)
+    ax1.axes.x_label = "State (n)"
+    ax1.axes.y_label = "Time"
+    ax1.axes.z_label = "Population"
+    ax1.axes.x_axis_visibility = False
+    ax1.axes.y_axis_visibility = True
+    ax1.axes.z_axis_visibility = False
+    ax1.axes.number_of_labels = 6
+    ax1.axes.use_data_bounds = False
+    ax1.axes.bounds = [0, size, 0, size, 0, size]
+    ax1.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
+    ax1.axes.use_ranges = True
+    ax1.label_text_property.font_size = 3
+    ax1.axes.label_format = '%.1f'
+
+    ax2 = new_axis(fig)
+    ax2.axes.x_label = "State (n)"
+    ax2.axes.y_label = "Time"
+    ax2.axes.z_label = "Population"
+    ax2.axes.x_axis_visibility = True
+    ax2.axes.y_axis_visibility = False
+    ax2.axes.z_axis_visibility = False
+    ax2.axes.number_of_labels = 6
+    ax2.axes.use_data_bounds = False
+    ax2.axes.bounds = [0, size, 0, size, 0, size]
+    ax2.axes.ranges = [len(N_fine) - 1, 0, 0, 1, 0, 1]
+    ax2.axes.use_ranges = True
+    ax2.label_text_property.font_size = 3
+    ax2.axes.label_format = '%.0f'
+    ax2.axes.fly_mode = 'none'
+    ax2.axes.corner_offset = 2
+
+    mlab.outline(surf, color=(0., 0., 0.),
+                 extent=[0, size, 0, size, 0, size])
+    # mlab.show_pipeline()
+    mlab.view(0, 90)
+    mlab.show()
+
 def main_animate():
     __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
                                               'axes.titlesize': 20})
@@ -902,10 +1009,11 @@ def main():
     # main_raman_sb_cooling3()
     # main_raman_sb_cooling4()
     # main_raman_sb_cooling5()
-    main_raman_sb_cooling6()
+    # main_raman_sb_cooling6()
     # main_plot()
     # main_plot2()
     # main_plot3()
+    main_plot4()
     # main_animate()
     # main_animate2()
     # main_animate3()
