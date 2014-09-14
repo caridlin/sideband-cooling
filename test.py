@@ -8,6 +8,7 @@ from cooling import pump_mat, raman_mat, calc_ddt_pump, calc_ddt_raman
 from cooling import gamma_pump, omega_raman, evolve_rho
 from ode import solve_ode
 from numpy import *
+import numpy as np
 
 def _load_jsons(fnames, field):
     import json
@@ -661,6 +662,91 @@ def main_plot2():
     savefig('n_decrease85.png', bbox_inches='tight')
     show()
 
+def main_plot3():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid
+    from mpl_toolkits.mplot3d import axes3d
+    import matplotlib.pyplot as plt
+    from matplotlib import cm
+
+    names = ['res5.json', 'res24.json', 'res26.json', 'res29.json']
+    ps = _load_jsons(names, 'ps')
+    ns = _load_jsons(names, 'ns')
+
+    fig = figure()
+    ax = fig.gca(projection='3d')
+    T_fine = r_[0:len(ps) - 1]
+    N_fine = r_[:10]
+    T_fine, N_fine = np.meshgrid(T_fine, N_fine)
+
+    P_all = array([(array(p[:len(p) // 2]) + p[len(p) // 2:]) for p in ps])
+    P_fine = P_all[T_fine, N_fine]
+    surf = ax.plot_surface(P_fine, N_fine, T_fine, rstride=1, cstride=1,
+                           cmap=cm.jet_r, linewidth=0, antialiased=False)
+
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    show()
+
+    # for i in r_[0:len(ps) - 1:7j]:
+    #     i = int(i)
+    #     p = ps[i]
+    #     p1 = (array(p[:len(p) // 2]) + p[len(p) // 2:])[:10]
+    #     plot(p1, label="$t = %d$" % i, linewidth=2,
+    #          linestyle='-', marker='.')
+    # xlabel('$n$')
+    # legend()
+    # grid()
+    # title("Energy level distribution\nat different time.")
+    # # savefig('cool_process85.png', bbox_inches='tight')
+
+def main_plot3():
+    __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
+                                              'axes.titlesize': 20})
+    from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
+    from pylab import legend, title, savefig, close, grid
+    from mpl_toolkits.mplot3d import axes3d
+    import matplotlib.pyplot as plt
+    from matplotlib import cm
+    from mayavi import mlab
+
+    names = ['res5.json', 'res24.json', 'res26.json', 'res28.json']
+    ps = _load_jsons(names, 'ps')
+    ns = _load_jsons(names, 'ns')
+
+    T_fine = r_[0:len(ps) - 1]
+    N_fine = r_[:11]
+    T_fine, N_fine = np.meshgrid(T_fine, N_fine)
+
+    P_all = array([(array(p[:len(p) // 2]) + p[len(p) // 2:]) for p in ps])
+    P_fine = P_all[T_fine, N_fine]
+    surf = mlab.mesh(P_fine, N_fine / (len(N_fine) - 1), T_fine / (len(ps) - 1),
+                     colormap='blue-red')
+    surf.module_manager.scalar_lut_manager.reverse_lut = True
+
+    ax = mlab.axes(xlabel="Population", ylabel='State', zlabel="Time",
+                   x_axis_visibility=False, nb_labels=6,
+                   extent=[0, 1, 0, 1, 0, 1],
+                   ranges=[0, 1, 0, len(N_fine) - 1, 0, 1])
+    ax.label_text_property.font_size = 5
+
+    mlab.outline(surf, color=(.7, .7, .7),
+                 extent=[0, 1, 0, 1, 0, 1])
+    mlab.show()
+
+    # for i in r_[0:len(ps) - 1:7j]:
+    #     i = int(i)
+    #     p = ps[i]
+    #     p1 = (array(p[:len(p) // 2]) + p[len(p) // 2:])[:10]
+    #     plot(p1, label="$t = %d$" % i, linewidth=2,
+    #          linestyle='-', marker='.')
+    # xlabel('$n$')
+    # legend()
+    # grid()
+    # title("Energy level distribution\nat different time.")
+    # # savefig('cool_process85.png', bbox_inches='tight')
+
 def main_animate():
     __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
                                               'axes.titlesize': 20})
@@ -818,7 +904,8 @@ def main():
     # main_raman_sb_cooling5()
     # main_raman_sb_cooling6()
     # main_plot()
-    main_plot2()
+    # main_plot2()
+    main_plot3()
     # main_animate()
     # main_animate2()
     # main_animate3()
