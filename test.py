@@ -784,10 +784,9 @@ def main_plot4():
     names = ['res5.json', 'res24.json', 'res26.json', 'res29.json']
     ps = _load_jsons(names, 'ps')
     ns = _load_jsons(names, 'ns')
-    print(len(ps[0]))
 
-    size = 100
-    t_size = 100
+    size = 20
+    t_size = 50
 
     fig = mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
 
@@ -805,15 +804,14 @@ def main_plot4():
     ax0.axes.x_label = "State (n)"
     ax0.axes.y_label = "Time"
     ax0.axes.z_label = "Population"
-    ax0.axes.x_axis_visibility = True
+    ax0.axes.x_axis_visibility = False
     ax0.axes.y_axis_visibility = False
-    ax0.axes.z_axis_visibility = False
+    ax0.axes.z_axis_visibility = True
     ax0.axes.number_of_labels = 6
     ax0.axes.use_data_bounds = False
     ax0.axes.bounds = [0, size, 0, size, 0, size]
     ax0.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
     ax0.axes.use_ranges = True
-    ax0.label_text_property.font_size = 3
     ax0.axes.label_format = '%.1f'
 
     ax1 = new_axis(fig)
@@ -828,7 +826,6 @@ def main_plot4():
     ax1.axes.bounds = [0, size, 0, size, 0, size]
     ax1.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
     ax1.axes.use_ranges = True
-    ax1.label_text_property.font_size = 3
     ax1.axes.label_format = '%.1f'
 
     ax2 = new_axis(fig)
@@ -841,17 +838,14 @@ def main_plot4():
     ax2.axes.number_of_labels = 6
     ax2.axes.use_data_bounds = False
     ax2.axes.bounds = [0, size, 0, size, 0, size]
-    ax2.axes.ranges = [len(N_fine) - 1, 0, 0, 1, 0, 1]
+    ax2.axes.ranges = [0, len(N_fine) - 1, 0, 1, 0, 1]
     ax2.axes.use_ranges = True
-    ax2.label_text_property.font_size = 3
     ax2.axes.label_format = '%.0f'
-    ax2.axes.fly_mode = 'none'
-    ax2.axes.corner_offset = 2
 
     mlab.outline(surf, color=(0., 0., 0.),
                  extent=[0, size, 0, size, 0, size])
     # mlab.show_pipeline()
-    mlab.view(0, 90)
+    mlab.view(290, 90)
     mlab.show()
 
 def main_animate():
