@@ -711,23 +711,24 @@ def main_plot3():
     from matplotlib import cm
     from mayavi import mlab
 
-    names = ['res5.json', 'res24.json', 'res26.json', 'res29.json']
+    names = ['res5.json', 'res24.json', 'res26.json', 'res28.json']
     ps = _load_jsons(names, 'ps')
     ns = _load_jsons(names, 'ns')
+    print(len(ps[0]))
 
     T_fine = r_[0:len(ps) - 1]
-    N_fine = r_[:11]
+    N_fine = r_[:101]
     T_fine, N_fine = np.meshgrid(T_fine, N_fine)
 
     P_all = array([(array(p[:len(p) // 2]) + p[len(p) // 2:]) for p in ps])
     P_fine = P_all[T_fine, N_fine]
-    surf = mlab.mesh(P_fine, N_fine / (len(N_fine) - 1), T_fine / (len(ps) - 1),
+    surf = mlab.mesh(N_fine / (len(N_fine) - 1), P_fine, T_fine / (len(ps) - 1),
                      colormap='blue-red')
     surf.module_manager.scalar_lut_manager.reverse_lut = True
 
-    ax = mlab.axes(xlabel="Population", ylabel='State', zlabel="Time",
+    ax = mlab.axes(xlabel='State (n)', ylabel="Population", zlabel="Time",
                    nb_labels=6, extent=[0, 1, 0, 1, 0, 1],
-                   ranges=[0, 1, 0, len(N_fine) - 1, 0, 1])
+                   ranges=[0, len(N_fine) - 1, 0, 1, 0, 1])
     ax.label_text_property.font_size = 5
 
     mlab.outline(surf, color=(.7, .7, .7),
@@ -901,10 +902,10 @@ def main():
     # main_raman_sb_cooling3()
     # main_raman_sb_cooling4()
     # main_raman_sb_cooling5()
-    # main_raman_sb_cooling6()
+    main_raman_sb_cooling6()
     # main_plot()
     # main_plot2()
-    main_plot3()
+    # main_plot3()
     # main_animate()
     # main_animate2()
     # main_animate3()
