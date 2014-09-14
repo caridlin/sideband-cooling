@@ -711,7 +711,7 @@ def main_plot3():
     from matplotlib import cm
     from mayavi import mlab
 
-    names = ['res5.json', 'res24.json', 'res26.json', 'res28.json']
+    names = ['res5.json', 'res24.json', 'res26.json', 'res29.json']
     ps = _load_jsons(names, 'ps')
     ns = _load_jsons(names, 'ns')
 
@@ -726,8 +726,7 @@ def main_plot3():
     surf.module_manager.scalar_lut_manager.reverse_lut = True
 
     ax = mlab.axes(xlabel="Population", ylabel='State', zlabel="Time",
-                   x_axis_visibility=False, nb_labels=6,
-                   extent=[0, 1, 0, 1, 0, 1],
+                   nb_labels=6, extent=[0, 1, 0, 1, 0, 1],
                    ranges=[0, 1, 0, len(N_fine) - 1, 0, 1])
     ax.label_text_property.font_size = 5
 
