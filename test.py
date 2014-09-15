@@ -785,8 +785,8 @@ def main_plot4():
     ps = _load_jsons(names, 'ps')
     ns = _load_jsons(names, 'ns')
 
-    size = 100
-    t_size = 100
+    size = 20
+    t_size = 50
 
     fig = mlab.figure(bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
 
@@ -796,8 +796,10 @@ def main_plot4():
 
     P_all = array([(array(p[:len(p) // 2]) + p[len(p) // 2:]) for p in ps])
     P_fine = P_all[T_fine, N_fine]
+    # No idea what's wrong with the extent here ....
     surf = mlab.barchart(P_fine * size, colormap='blue-red',
-                         extent=[0, size, 0, size, 0, 1], figure=fig)
+                         extent=[0, size, 0, size, 0, 1 + 2. / size],
+                         figure=fig)
     # surf.module_manager.scalar_lut_manager.reverse_lut = True
 
     ax0 = new_axis(fig)
