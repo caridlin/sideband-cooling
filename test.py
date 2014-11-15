@@ -58,6 +58,7 @@ def main_odt():
 def main_cooling():
     __import__("matplotlib").rcParams.update({'axes.labelsize': 20,
                                               'axes.titlesize': 20})
+    __import__("matplotlib").use('Svg')
     from pylab import plot, show, imshow, figure, colorbar, xlabel, ylabel
     from pylab import legend, title, savefig, close, grid
 
@@ -77,7 +78,7 @@ def main_cooling():
     legend()
     grid()
     # title('Optical pumping branching faction\n($\\theta=0$)')
-    savefig('pump_0.8_0_curve.png', bbox_inches='tight')
+    savefig('pump_0.8_0_curve.svg', bbox_inches='tight')
     close()
 
     figure()
@@ -86,7 +87,7 @@ def main_cooling():
     ylabel('$n_2$')
     title('Optical pumping branching faction\n($\\eta=0.8, \\theta=0$)')
     colorbar()
-    savefig('pump_0.8_0.png', bbox_inches='tight')
+    savefig('pump_0.8_0.svg', bbox_inches='tight')
     close()
 
     figure()
@@ -96,7 +97,7 @@ def main_cooling():
     title('Optical pumping branching faction\n'
           '($\\eta=0.8, \\theta=\\frac{\\pi}{2}$)')
     colorbar()
-    savefig('pump_0.8_pi_2.png', bbox_inches='tight')
+    savefig('pump_0.8_pi_2.svg', bbox_inches='tight')
     close()
 
     figure()
@@ -113,7 +114,7 @@ def main_cooling():
     ylabel(r'$|\langle n|e^{ikr}|n-\delta n\rangle|^2$')
     legend()
     grid()
-    savefig('raman_0.8_1.png', bbox_inches='tight')
+    savefig('raman_0.8_1.svg', bbox_inches='tight')
     close()
     # show()
 
@@ -1001,7 +1002,7 @@ def main_animate4():
 def main():
     # main_sideband()
     # main_odt()
-    # main_cooling()
+    main_cooling()
     # main_ode()
     # main_pump()
     # main_raman_sb_cooling()
@@ -1012,7 +1013,7 @@ def main():
     # main_plot()
     # main_plot2()
     # main_plot3()
-    main_plot4()
+    # main_plot4()
     # main_animate()
     # main_animate2()
     # main_animate3()

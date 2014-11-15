@@ -48,7 +48,7 @@ def sb_strength2(m, n, eta):
     eta = float64(eta)
     if m > n:
         # cache friendly
-        return sb_strength(n, m, eta)
+        return sb_strength2(n, m, eta)
     dn = n - m
     size = (m + 2) // 2
     buff = empty(size, dtype=float64)
